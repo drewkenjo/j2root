@@ -9,5 +9,5 @@ scons
 mvn package
 ```
 4. Set environment variables:
-** `LD_LIBRARY_PATH` to point to `FULLPATH_TO_J2ROOT_DIRECTORY/build` location
-** if you use run-groovy set `JYPATH` to `FULLPATH_TO_J2ROOT_DIRECTORY/target/*` location
+  * `LD_LIBRARY_PATH` to point to `FULLPATH_TO_J2ROOT_DIRECTORY/build` location
+  * if you use run-groovy set `JYPATH` to `FULLPATH_TO_J2ROOT_DIRECTORY/target/*` location
