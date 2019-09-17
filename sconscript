@@ -1,14 +1,9 @@
 Import('env')
-#classes = env.Java('classes', 'src/java')
-#env.JavaH(target = 'native', source = classes)
-#env.Jar(target='jroot.jar', source = classes)
 
 env.JavaH(target = 'native', source = 'src/main/java/org/jlab/jroot/JRootJNI.java')
 if 'JAVA_HOME' in env['ENV']:
   env['JAVA_HOME'] = env['ENV']['JAVA_HOME']
   env.Append(CPPPATH = ["$JAVA_HOME/include", "$JAVA_HOME/include/linux"])
 env.Append(CPPPATH = ['native'])
-#env.ParseConfig("/opt/root/6.18.04/bin/root-config --glibs --cflags")
 env.ParseConfig("root-config --glibs --cflags")
-#env.Append(RPATH = ["/opt/root/6.18.04/lib"])
 env.SharedLibrary('jrootJNI', Glob('src/cpp/*.cpp'))
