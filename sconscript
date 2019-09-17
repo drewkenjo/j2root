@@ -5,7 +5,7 @@ if 'JAVA_HOME' in env['ENV']:
   env['JAVA_HOME'] = env['ENV']['JAVA_HOME']
   env.Append(CPPPATH = ["$JAVA_HOME/include", "$JAVA_HOME/include/linux"])
 if env['PLATFORM'] == 'darwin':
-  env.ParseConfig("echo -I`java_home`/include")
+  env.ParseConfig("echo -I`/usr/libexec/java_home`/include")
 env.Append(CPPPATH = ['native'])
 env.ParseConfig("root-config --glibs --cflags")
 env.SharedLibrary('jrootJNI', Glob('src/cpp/*.cpp'))
