@@ -12,5 +12,5 @@ def t1 = f1.makeNtuple('h22', 'title', 'x:y')
   t1.fill(it, it+Math.random())
 }
 
-t1.write();
-f1.close();
+t1.write()
+f1.close()
