@@ -34,11 +34,11 @@ public class TNtuple {
       saveSize -= 2000;
       float[] arr = new float[bucketSize];
 
-      int iarr = 0; 
-      while(iarr<bucketSize) {
+      for(int iar=0; iar<bucketSize; iar+=nvars) {
         double[] vars = data.poll();
-        for(double x: vars)
-          arr[iarr++] = (float) x;
+        for(int ivar=0; ivar<nvars; ivar++) {
+          arr[iar+ivar] = (float) vars[ivar];
+        }
       }
 
       jroot.fillNtuple(id, nvars, arr);
