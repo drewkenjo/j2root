@@ -27,6 +27,11 @@ public class ROOTFile {
     this.path = path.replaceFirst("^/*","").replaceAll("/*\\$","");
   }
 
+  public TNtuple makeNtuple(String name, String title, String varlist) {
+    TNtuple tpl = new TNtuple(fname, path, name, title, varlist);
+    return tpl;
+  }
+
   public void writeDataSet(H1F h1) {
     String title = h1.getTitle()+";"+h1.getTitleX()+";"+h1.getTitleY();
     jroot.writeH1F(fname, path, h1.getName(), title,

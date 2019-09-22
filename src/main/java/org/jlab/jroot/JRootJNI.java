@@ -5,7 +5,6 @@ public class JRootJNI {  // Save as HelloJNI.java
       System.loadLibrary("jrootJNI");
     }
 
- 
    public native void createFile(String fname);
    public native void closeFile(String fname);
    public native void mkdir(String fname,String path);
@@ -15,4 +14,8 @@ public class JRootJNI {  // Save as HelloJNI.java
      int nxbins, double xmin, double xmax, int nybins, double ymin, double ymax, float[] arr);
    public native void writeGraphErrors(String fname, String path, String grname, String title,
      double[] xx, double[] yy, double[] ex, double[] ey);
+
+   public native void createNtuple(String id, String fname, String path, String name, String title, String varlist);
+   public native void writeNtuple(String id, String fname, String path);
+   public native void fillNtuple(String id, int nvars, float[] arr);
 }
