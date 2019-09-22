@@ -1,5 +1,6 @@
 #include <iostream>
-#include <map>
+#include <unordered_map>
+#include <mutex>
 #include <jni.h>
 #include <stdio.h>
 #include <TROOT.h>
