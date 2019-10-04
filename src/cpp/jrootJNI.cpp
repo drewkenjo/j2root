@@ -73,6 +73,8 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeH1F (JNIEnv *env, jobje
   float *cdata = env->GetFloatArrayElements(jdata, NULL);
 
   TFile* ff = (TFile*) objects.get(fname);
+  if(!ff->Get(path))
+    ff->mkdir(path);
   ff->cd(path);
 
   TH1F* h1 = new TH1F(name, title, nbins, xmin, xmax);
@@ -107,6 +109,8 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeH2F (JNIEnv *env, jobje
   float *cdata = env->GetFloatArrayElements(jdata, NULL);
 
   TFile* ff = (TFile*) objects.get(fname);
+  if(!ff->Get(path))
+    ff->mkdir(path);
   ff->cd(path);
 
   TH2F* h2 = new TH2F(name, title, nxbins, xmin, xmax, nybins, ymin, ymax);
@@ -144,6 +148,8 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeGraphErrors (JNIEnv *en
   double *ey = env->GetDoubleArrayElements(jey, NULL);
 
   TFile* ff = (TFile*) objects.get(fname);
+  if(!ff->Get(path))
+    ff->mkdir(path);
   ff->cd(path);
 
   jsize length = env->GetArrayLength(jxx);
@@ -192,6 +198,8 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeNtuple (JNIEnv *env, jo
   const char *path = env->GetStringUTFChars(jpath, NULL);
 
   TFile* ff = (TFile*) objects.get(fname);
+  if(!ff->Get(path))
+    ff->mkdir(path);
   ff->cd(path);
   TNtuple* tpl = (TNtuple*) objects.get(id);
   tpl->Write();
