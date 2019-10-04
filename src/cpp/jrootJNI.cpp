@@ -75,6 +75,7 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeH1F (JNIEnv *env, jobje
   TFile* ff = (TFile*) objects.get(fname);
   if(!ff->Get(path))
     ff->mkdir(path);
+  std::cout<<path<<" "<<name<<std::endl;
   ff->cd(path);
 
   TH1F* h1 = new TH1F(name, title, nbins, xmin, xmax);
@@ -112,6 +113,7 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeH2F (JNIEnv *env, jobje
   if(!ff->Get(path))
     ff->mkdir(path);
   ff->cd(path);
+  std::cout<<path<<" "<<name<<std::endl;
 
   TH2F* h2 = new TH2F(name, title, nxbins, xmin, xmax, nybins, ymin, ymax);
   double nentries = 0;
@@ -150,6 +152,7 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_writeGraphErrors (JNIEnv *en
   TFile* ff = (TFile*) objects.get(fname);
   if(!ff->Get(path))
     ff->mkdir(path);
+  std::cout<<path<<" "<<name<<std::endl;
   ff->cd(path);
 
   jsize length = env->GetArrayLength(jxx);

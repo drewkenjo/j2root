@@ -36,6 +36,7 @@ public class ROOTFile {
     String fullpath = path + "/" + h1.getName();
     int ind = fullpath.lastIndexOf("/");
     String relpath = fullpath.substring(0,ind);
+    relpath = relpath.replaceFirst("^/*","").replaceAll("/*\\$","");
     String name = fullpath.substring(ind+1);
     String title = h1.getTitle()+";"+h1.getTitleX()+";"+h1.getTitleY();
     jroot.writeH1F(fname, relpath, name, title,
@@ -47,6 +48,7 @@ public class ROOTFile {
     String fullpath = path + "/" + h2.getName();
     int ind = fullpath.lastIndexOf("/");
     String relpath = fullpath.substring(0,ind);
+    relpath = relpath.replaceFirst("^/*","").replaceAll("/*\\$","");
     String name = fullpath.substring(ind+1);
     String title = h2.getTitle()+";"+h2.getTitleX()+";"+h2.getTitleY();
     int xsize = h2.getDataSize(0), ysize = h2.getDataSize(1), ii = 0;
@@ -65,6 +67,7 @@ public class ROOTFile {
     String fullpath = path + "/" + gr.getName();
     int ind = fullpath.lastIndexOf("/");
     String relpath = fullpath.substring(0,ind);
+    relpath = relpath.replaceFirst("^/*","").replaceAll("/*\\$","");
     String name = fullpath.substring(ind+1);
     String title = gr.getTitle()+";"+gr.getTitleX()+";"+gr.getTitleY();
     int size = gr.getDataSize(0);
