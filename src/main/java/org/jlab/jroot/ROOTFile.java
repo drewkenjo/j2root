@@ -32,6 +32,10 @@ public class ROOTFile {
     return tpl;
   }
 
+  public void addDataSet(H1F h1) {
+    writeDataSet(h1);
+  }
+
   public void writeDataSet(H1F h1) {
     String fullpath = path + "/" + h1.getName();
     int ind = fullpath.lastIndexOf("/");
@@ -42,6 +46,10 @@ public class ROOTFile {
     jroot.writeH1F(fname, relpath, name, title,
       h1.getXaxis().getNBins(), h1.getXaxis().min(), h1.getXaxis().max(),
       h1.getData());
+  }
+
+  public void addDataSet(H2F h2) {
+    writeDataSet(h2);
   }
 
   public void writeDataSet(H2F h2) {
@@ -61,6 +69,10 @@ public class ROOTFile {
       h2.getXAxis().getNBins(), h2.getXAxis().min(), h2.getXAxis().max(),
       h2.getYAxis().getNBins(), h2.getYAxis().min(), h2.getYAxis().max(),
       data);
+  }
+
+  public void addDataSet(GraphErrors gr) {
+    writeDataSet(gr);
   }
 
   public void writeDataSet(GraphErrors gr) {
