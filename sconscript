@@ -9,5 +9,5 @@ if env['PLATFORM'] == 'darwin':
   env.ParseConfig("echo -I`/usr/libexec/java_home`/include/darwin")
   env.ParseConfig("echo -Wl,-rpath,`root-config --libdir`")
 env.Append(CPPPATH = ['native'])
-env.ParseConfig("root-config --glibs --cflags")
+env.ParseConfig("root-config --libs --cflags")
 env.SharedLibrary('jrootJNI', Glob('src/cpp/*.cpp'))
