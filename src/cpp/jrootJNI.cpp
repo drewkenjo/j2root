@@ -37,6 +37,7 @@ concurrentMap objects;
 static __attribute__((constructor)) void init() {
   gSystem->ResetSignals();
   ROOT::EnableThreadSafety();
+  gROOT->SetBatch(true);
 }
 
 JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_createFile (JNIEnv *env, jobject thisObj, jstring jfname) {
