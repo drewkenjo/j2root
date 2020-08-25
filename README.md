@@ -12,3 +12,6 @@ mvn package
   * `source setup.sh` in bash
   * `source setup.csh` in csh
 5. `run-groovy root.groovy`
+
+# Wiki
+https://github.com/drewkenjo/j2root/wiki
