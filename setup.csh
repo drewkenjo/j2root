@@ -2,8 +2,7 @@
 set sourced=($_)
 if ("$sourced" != "") then
   set RELDIR="`dirname $sourced[2]`"
-endif
-if ("$0" != "tcsh") then
+else if ("$0" != "tcsh") then
   set RELDIR="`dirname $0`"
 endif
 
