@@ -1,9 +1,8 @@
 package org.jlab.jroot;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TNtuple {
   private JRootJNI jroot = new JRootJNI();
@@ -11,9 +10,9 @@ public class TNtuple {
   private String path = "";
   private String id;
   private int nvars;
-  private boolean isFinished = false;
   private ConcurrentLinkedQueue<double[]> data = new ConcurrentLinkedQueue<>();
-  private ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+  private ReentrantLock lock = new ReentrantLock();
+
 
   private TNtuple() {
   }
@@ -24,10 +23,9 @@ public class TNtuple {
     this.nvars = varlist.split(":").length;
     this.id = fname+":"+path+":"+name;
     jroot.createNtuple(id, fname, path, name, title, varlist);
-    executor.scheduleWithFixedDelay(this::save, 200, 200, TimeUnit.MILLISECONDS);
   }
 
-  private void save() {
+  private void save(boolean isFinished) {
     int saveSize = data.size();
     while(saveSize>0) {
       int bucketSize = Math.min(saveSize, 2000) * nvars;
@@ -44,18 +42,28 @@ public class TNtuple {
       jroot.fillNtuple(id, nvars, arr);
     }
 
-    if(isFinished && data.isEmpty()) {
+    if(isFinished) {
       jroot.writeNtuple(id, fname, path);
-      executor.shutdown();
     }
   }
 
-  public void write() throws InterruptedException {
-    isFinished = true;
-    executor.awaitTermination(10, TimeUnit.MINUTES);
+  public void write() {// throws InterruptedException {
+    lock.lock();
+    try {
+      save(true);
+    } finally {
+      lock.unlock();
+    }
   }
 
   public void fill(double... x) {
     data.add(x);
+    if(data.size() > 10000 && lock.tryLock()) {
+      try {
+        save(false);
+      } finally {
+        lock.unlock();
+      }
+    }
   }
 }
