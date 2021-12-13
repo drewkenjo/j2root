@@ -8,6 +8,7 @@
 #include <TString.h>
 #include <TFile.h>
 #include <TNtuple.h>
+#include <TString.h>
 #include <TH1F.h>
 #include <TH2F.h>
 #include <TMap.h>
@@ -222,6 +223,144 @@ JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_fillNtuple (JNIEnv *env, job
 
   env->ReleaseFloatArrayElements(jarr, arr, 0);
   env->ReleaseStringUTFChars(jid, id);
+}
+
+
+
+////////////////////////////////////////////////////////
+
+class JTree{
+private:
+  TFile* ff;
+  TTree* tt;
+  float flts[100];
+  int ints[100];
+  int nflt;
+  int nint;
+
+public:
+  JTree(std::string fname, std::string name, std::string _varlist) {
+    nint = 0;
+    nflt = 0;
+
+    ff = new TFile(fname.data(), "recreate");
+    tt = new TTree(name.data(), fname.data());
+
+    TString varlist(_varlist);
+    TString vname;
+    Ssiz_t from = 0;
+    while (varlist.Tokenize(vname, from, ":")) {
+      if(vname.EndsWith("/I")) {
+        int pos = vname.Index("/");
+        vname.Resize(pos);
+        tt->Branch(vname, &ints[nint], vname+"/I");
+        nint++;
+      } else {
+        int pos = vname.Index("/");
+        if(pos>0) vname.Resize(pos);
+        tt->Branch(vname, &flts[nflt], vname+"/F");
+        nflt++;
+      }
+    }
+  }
+
+  float* LoadFloats(float* _flts) {
+    std::copy(_flts, _flts+nflt, flts);
+    return _flts+nflt;
+  }
+
+  int* LoadInts(int* _ints) {
+    std::copy(_ints, _ints+nint, ints);
+    return _ints+nint;
+  }
+
+  int GetNflt() {
+    return nflt;
+  }
+
+  void Fill() {
+    tt->Fill();
+  }
+
+  void Write() {
+    tt->Write();
+  }
+
+  void Close() {
+    ff->Close();
+  }
+};
+
+class concurrentMapOfTrees
+{
+  std::mutex m_;
+  std::unordered_map<std::string, JTree*> objs;
+
+public:
+    JTree* get(std::string k) {
+        std::unique_lock<decltype(m_)> lock(m_);
+        return objs[k];
+    }
+
+    void put(std::string k, JTree* v) {
+        std::unique_lock<decltype(m_)> lock(m_);
+        objs[k] = v;
+    }
+};
+
+concurrentMapOfTrees jtrees;
+
+
+JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_createJTree (JNIEnv *env, jobject thisObj, jstring jfname, jstring jname, jstring jvarlist) {
+  const char *fname = env->GetStringUTFChars(jfname, NULL);
+  const char *name = env->GetStringUTFChars(jname, NULL);
+  const char *varlist = env->GetStringUTFChars(jvarlist, NULL);
+
+  JTree* jtr = new JTree(fname, name, varlist);
+  jtrees.put(fname, jtr);
+
+  env->ReleaseStringUTFChars(jfname, fname);
+  env->ReleaseStringUTFChars(jname, name);
+  env->ReleaseStringUTFChars(jvarlist, varlist);
+}
+
+
+JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_closeJTree(JNIEnv *env, jobject thisObj, jstring jfname) {
+  const char *fname = env->GetStringUTFChars(jfname, NULL);
+  jtrees.get(fname)->Write();
+  jtrees.get(fname)->Close();
+  env->ReleaseStringUTFChars(jfname, fname);
+}
+
+
+JNIEXPORT void JNICALL Java_org_jlab_jroot_JRootJNI_fillJTree(JNIEnv *env, jobject thisObj, jstring jfname, jfloatArray jflts, jintArray jints) {
+  const char *fname = env->GetStringUTFChars(jfname, NULL);
+  float *cflts = env->GetFloatArrayElements(jflts, NULL);
+  int* cints = env->GetIntArrayElements(jints, NULL);
+
+  float* _flt = cflts;
+  int* _int = cints;
+
+  JTree* jtr = jtrees.get(fname);
+  jsize length = env->GetArrayLength(jflts);
+  int nflt = jtr->GetNflt();
+
+  if(length%nflt!=0) {
+    std::cerr<<"Array size inconsistent"<<std::endl;
+    exit(111);
+  }
+
+  int nrows = length/nflt;
+  for(int irow=0;irow<nrows;irow++) {
+    _flt = jtr->LoadFloats(_flt);
+    _int = jtr->LoadInts(_int);
+
+    jtr->Fill();
+  }
+
+  env->ReleaseFloatArrayElements(jflts, cflts, 0);
+  env->ReleaseIntArrayElements(jints, cints, 0);
+  env->ReleaseStringUTFChars(jfname, fname);
 }
 
 

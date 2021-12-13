@@ -32,6 +32,11 @@ public class ROOTFile {
     return tpl;
   }
 
+  public JTree makeTree(String name, String title, String varlist) {
+    JTree jtr = new JTree(fname, path, name, title, varlist);
+    return jtr;
+  }
+
   public void addDataSet(H1F h1) {
     writeDataSet(h1);
   }

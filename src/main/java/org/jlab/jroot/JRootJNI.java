@@ -18,4 +18,8 @@ public class JRootJNI {  // Save as HelloJNI.java
    public native void createNtuple(String id, String fname, String path, String name, String title, String varlist);
    public native void writeNtuple(String id, String fname, String path);
    public native void fillNtuple(String id, int nvars, float[] arr);
+
+   public native void createJTree(String fname, String name, String varlist);
+   public native void closeJTree(String fname);
+   public native void fillJTree(String fname, float[] jflts, int[] jints);
 }
