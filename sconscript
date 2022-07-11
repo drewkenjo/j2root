@@ -1,6 +1,6 @@
 Import('env')
 
-env.JavaH(target = 'native', source = 'src/main/java/org/jlab/jroot/JRootJNI.java')
+#env.JavaH(target = 'native', source = 'src/main/java/org/jlab/jroot/JRootJNI.java')
 if 'JAVA_HOME' in env['ENV']:
   env['JAVA_HOME'] = env['ENV']['JAVA_HOME']
   env.Append(CPPPATH = ["$JAVA_HOME/include", "$JAVA_HOME/include/linux"])
