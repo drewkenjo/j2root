@@ -6,6 +6,7 @@
 git clone git@github.com:drewkenjo/j2root.git
 cd j2root
 mvn package
+scons build/native
 scons
 ```
 4. Set environment variables:
