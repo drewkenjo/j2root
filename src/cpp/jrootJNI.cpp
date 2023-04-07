@@ -233,8 +233,8 @@ class JTree{
 private:
   TFile* ff;
   TTree* tt;
-  float flts[100];
-  int ints[100];
+  float *flts;
+  int *ints;
   int nflt;
   int nint;
 
@@ -247,6 +247,11 @@ public:
     tt = new TTree(name.data(), fname.data());
 
     TString varlist(_varlist);
+
+    int nvars = varlist.Tokenize(":")->GetEntries();
+    flts = new float[nvars];
+    ints = new int[nvars];
+
     TString vname;
     Ssiz_t from = 0;
     while (varlist.Tokenize(vname, from, ":")) {

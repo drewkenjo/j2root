@@ -28,6 +28,7 @@ public class JTree {
 
     String[] vnames = varlist.split(":");
     this.nvars = vnames.length;
+    types = new int[this.nvars];
     for(int ivar=0;ivar<nvars;ivar++) {
       if(vnames[ivar].contains("/I")) {
         types[ivar] = 1;
@@ -83,6 +84,18 @@ public class JTree {
   }
 
   public void fill(Number... x) {
+    data.add(x);
+    if(data.size() > 10000 && lock.tryLock()) {
+      try {
+        save(false);
+      } finally {
+        lock.unlock();
+      }
+    }
+  }
+
+  public void fill(List<Number> xlist) {
+    Number[] x = xlist.toArray(new Number[0]);
     data.add(x);
     if(data.size() > 10000 && lock.tryLock()) {
       try {
