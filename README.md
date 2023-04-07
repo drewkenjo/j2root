@@ -16,3 +16,23 @@ scons
 
 # Wiki
 https://github.com/drewkenjo/j2root/wiki
+
+# Troubleshooting
+
+## array length is not legal
+
+If your tree contains more than 250 branches your code can fail with this error
+<pre>
+Caught: java.lang.IllegalArgumentException: array length is not legal:
+java.lang.IllegalArgumentException: array length is not legal:
+</pre>
+
+The reason is because the length of the varargs is limited, and groovy fails when you pass too many arguments in `fill` method.
+The solution is to use List in the `fill` method instead of varargs:
+Instead of:
+
+`tree->Fill(0,1,2,3,4,5,6)`
+
+use:
+
+`tree->Fill([0,1,2,3,4,5,6])`
