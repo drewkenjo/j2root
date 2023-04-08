@@ -32,8 +32,8 @@ The solution is to use List in the `fill` method instead of varargs.
 
 Instead of:
 
-`tree->Fill(0,1,2,3,4,5,6)`
+`tree.Fill(0,1,2,3,4,5,6)`
 
 use:
 
-`tree->Fill([0,1,2,3,4,5,6])`
+`tree.Fill([0,1,2,3,4,5,6])`
